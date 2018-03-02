@@ -2,20 +2,24 @@ var s = document.getElementById("svg_id");
 var sto = document.getElementById("stop");
 var circ = document.getElementById("circle");
 var d = document.getElementById("dvd");
+var id;
 
 var circle = function(){
+    clear();
     var radius = 25;
     var grow = true;
     var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     circle.setAttribute("cx", 300);
     circle.setAttribute("cy", 300);
+    circle.setAttribute("fill", "red");
+    circle.setAttribute("stroke", "black");
     s.appendChild(circle);
 
     var grow = function(){
 	if(grow){
 	    radius++;
 	    circle.setAttribute("r", radius);
-	    if(radius > 300){
+	    if(radius >= 300){
 		grow= false;
 	    }
 	}
@@ -27,50 +31,52 @@ var circle = function(){
     var shrink = function(){
 	radius--;
 	circle.setAttribute("r", radius);
-	if(radius < 0 ){
+	if(radius <= 0 ){
 	    grow = true;
 	}
     }
     
-    setInterval(grow, 10);
+    id = setInterval(grow, 10);
 }
 
 var dvd = function(){
-    var imgW = 100;
-    var imgH = 75;
-    var x = Math.random()*(c.width-imgW);
-    var y = Math.random()*(c.height-imgH);
-    var dX = 5;
-    var dY = 5;
+    clear();
+    var imgW = 200;
+    var imgH = 150;
+    var x = Math.random()*(600-imgW);
+    var y = Math.random()*(600-imgH);
+    var dX = 1;
+    var dY = 1;
+    var dvdLogo = document.createElementNS("http://www.w3.org/2000/svg", "image");
+    dvdLogo.setAttribute("width", imgW);
+    dvdLogo.setAttribute("height", imgH);
+    dvdLogo.setAttribute("href", 'dvd.jpg');
+    s.appendChild(dvdLogo);
     
     var move = function() {	
-	var img = new Image();
-	img.src = 'dvd.jpg';
-	img.onload = function(){
-	    //ctx.drawImage(img,x,y, imgW,imgH);
-	    var dvdLogo = document.createElementNS("http://www.w3.org/2000/svg", "image");
-	}
 	dvdLogo.setAttribute("x", x);
 	dvdLogo.setAttribute("y", y);
-	dvdLogo.setAttribute("width", imgW);
-	dvdLogo.setAttribute("height", imgH);
-	dvdLogo.setAttribute("xlink:hred", /*url*/);
-	if(x+imgW >= c.width || x < 0){
+	if(x+imgW >= 600 || x < 0){
 	    dX *= -1;
 	}
-	if(y+imgH >= c.height || y < 0){
+	if(y+imgH >= 600 || y < 0){
 	    dY *= -1;
 	}
 	x+=dX;
 	y+=dY;
-	requestID = window.requestAnimationFrame(move);
     }
     
-    move();
+    id = setInterval(move, 10);
 }
 
 var stop = function(){
-    window.cancelAnimationFrame(requestID);
+    clearInterval(id);
+}
+
+var clear = function(){
+    for(i = s.children.length-1; i >= 0; i--){
+	s.removeChild(s.children[i]);
+    }
 }
 
 circ.addEventListener("click", circle);
